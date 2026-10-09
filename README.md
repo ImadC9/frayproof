@@ -10,11 +10,15 @@ contract would catch nine kinds of context corruption. It works on existing
 OpenAI-style message lists without adopting an agent framework. No model or API
 key is needed by the checker.
 
-**0.1.0 is an unpublished release candidate. The hosted Linux/Windows matrix
-passes on Python 3.12, 3.13, and 3.14.** Python 3.12 or newer is required.
+The hosted Linux/Windows matrix passes on Python 3.12, 3.13, and 3.14.
+Python 3.12 or newer is required.
 The distribution, Python import, and command are all named `frayproof`.
 
-## Install locally
+## Install
+
+```bash
+python -m pip install frayproof
+```
 
 From a source checkout or the unpacked source distribution:
 
@@ -29,7 +33,6 @@ python -m pip install dist/frayproof-0.1.0-py3-none-any.whl
 ```
 
 Installing dependencies may use the network; the installed checker runs offline.
-After publication, registry installation will be `python -m pip install frayproof`.
 
 ## Find the bugs your contract misses
 

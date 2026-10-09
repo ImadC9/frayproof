@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 — prepared 2026-10-09, unpublished
+## 0.1.0 — 2026-10-09
 
 - Preserve original wire fields when invoking mutation targets and generating
   mutants; comparison normalization cannot hide a real input-dependent failure.

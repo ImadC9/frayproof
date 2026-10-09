@@ -1,16 +1,17 @@
 # Release handoff
 
-Frayproof 0.1.0 is an unpublished release candidate. The user authorized private
-GitHub CI in `ImadC9/frayproof`. Source is uploaded privately; no package, release
-tag, public repository, or issue has been published. The CI workflow builds and
-tests only; it has no publishing job. `docs/ISSUE_DRAFTS.md` contains five local issue drafts.
-`docs/ANNOUNCEMENT_DRAFT.md` leads with the mutation coverage demo and remains a
-local draft until publication is authorized.
+Source: `ImadC9/frayproof`. The CI workflow builds and tests only. The separate
+`release.yml` workflow publishes only when manually dispatched on `main` with
+the successful CI run ID for that exact revision. It checks all six matrix jobs
+and packaging, downloads their artifacts without rebuilding, publishes to PyPI
+with a Trusted Publisher, then creates the matching GitHub tag and release.
+`docs/ISSUE_DRAFTS.md` and `docs/ANNOUNCEMENT_DRAFT.md` remain drafts unless
+separately selected for posting.
 
 The hosted Linux/Windows Python 3.12/3.13/3.14 matrix passed on 2026-10-09:
 297 tests pass in each of the six combinations, and packaging passes.
 [Hosted validation run](https://github.com/ImadC9/frayproof/actions/runs/37876640504)
-is accessible to repository members. For any subsequent source changes, require
+records the initial release gate. For any subsequent source changes, require
 all six combinations and packaging to pass again before release. Local tests
 alone do not establish the supported matrix. The reported review defects are
 covered by [regressions and installed-wheel probes](REVIEW_FIXES.md).
@@ -38,17 +39,20 @@ the checkout to verify the review defects and SDK-null behavior independently.
 After the user explicitly requests publication:
 
 1. Recheck `frayproof` availability on PyPI and confirm `ImadC9/frayproof` as the
-   public source repository. Making the private repository public needs authorization.
-2. Add the real repository and issue URLs to project metadata; do not invent them.
+   public source repository.
+2. Confirm source, issue, and changelog URLs in project metadata.
 3. Confirm the reviewed source and release artifacts correspond to the tested
    revision, and require the complete GitHub CI matrix and packaging to pass.
 4. Rebuild and check wheel and source distribution, confirm version and hashes.
-5. Upload those exact distributions using the maintainer's PyPI account or trusted
-   publishing configuration. Configure credentials outside the source tree.
-6. Create tag `v0.1.0` and a GitHub release using the changelog and verified demo.
-7. Open the selected good first issue drafts.
+5. Configure the PyPI Trusted Publisher for owner `ImadC9`, repository `frayproof`,
+   workflow `release.yml`, environment `pypi`. For the first upload, register it
+   under account Publishing as a pending publisher for project `frayproof`.
+6. Dispatch `Publish 0.1.0` on `main` with its successful CI run ID. The workflow
+   publishes the verified distributions, creates tag `v0.1.0`, and publishes the
+   GitHub release from `docs/RELEASE_NOTES_0.1.0.md` with the same files attached.
+7. Open good first issue drafts only if selected for posting.
 8. Verify registry installation and the README demo in a fresh environment.
 
-The candidate is not yet available through `pip install frayproof` from a public
-registry. Hosted validation is complete; public visibility, tagging, registry
-upload, release creation, and issue posting still require publication authorization.
+Publication is complete only after the registry has version `0.1.0`, registry
+hashes match the verified artifacts, the GitHub release targets the tested
+revision, and fresh registry installation plus the demo pass.

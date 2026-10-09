@@ -33,5 +33,5 @@ failure directions too.
 The hosted Linux/Windows Python 3.12/3.13/3.14 matrix passed on 2026-10-09 with
 297 tests in each combination. Packaging passed too; see the
 [private CI run](https://github.com/ImadC9/frayproof/actions/runs/37876640504).
-The user authorized private repository setup and CI. Corrected artifacts remain
-unpublished release candidates until publication is explicitly authorized.
+Public releases use the maintainer-controlled workflow described in
+[the release guide](RELEASING.md).
