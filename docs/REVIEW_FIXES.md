@@ -30,7 +30,8 @@ remain detached. Normalized identity is used for comparisons, not to reconstruct
 the target input or the real output. The installed-wheel probe covers both
 failure directions too.
 
-The hosted Linux/Windows Python 3.12/3.13/3.14 matrix remains unrun. Corrected
-local artifacts are release candidates; hosted validation is still required
-before claiming the full supported matrix is verified. Publication and external
-repository setup remain subject to the user's instruction to keep work local.
+The hosted Linux/Windows Python 3.12/3.13/3.14 matrix passed on 2026-10-09 with
+297 tests in each combination. Packaging passed too; see the
+[private CI run](https://github.com/ImadC9/frayproof/actions/runs/37876640504).
+The user authorized private repository setup and CI. Corrected artifacts remain
+unpublished release candidates until publication is explicitly authorized.

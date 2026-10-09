@@ -10,8 +10,8 @@ contract would catch nine kinds of context corruption. It works on existing
 OpenAI-style message lists without adopting an agent framework. No model or API
 key is needed by the checker.
 
-**0.1.0 is a local, unpublished release candidate. Hosted platform/Python
-validation is still pending.** Python 3.12 or newer is required.
+**0.1.0 is an unpublished release candidate. The hosted Linux/Windows matrix
+passes on Python 3.12, 3.13, and 3.14.** Python 3.12 or newer is required.
 The distribution, Python import, and command are all named `frayproof`.
 
 ## Install locally
