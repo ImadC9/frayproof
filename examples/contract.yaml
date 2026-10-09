@@ -1,0 +1,14 @@
+version: 1
+format: openai
+checks:
+  tool_pairs:
+    allow_trailing_pending_call: true
+  unique_tool_ids: true
+  structure:
+    system_messages: leading_only
+pins:
+  - name: system-prompt
+    role: system
+    match: exact
+  - name: no-prod-writes
+    contains: "Never write to production"

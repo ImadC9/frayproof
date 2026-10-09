@@ -1,0 +1,8 @@
+[
+  {"role": "system", "content": "You are a coding agent. Never write to production."},
+  {"role": "user", "content": "Fix the failing test."},
+  {"role": "assistant", "content": null, "tool_calls": [{"id": "call_1", "type": "function", "function": {"name": "read_file", "arguments": "{\"path\":\"test_app.py\"}"}}]},
+  {"role": "tool", "tool_call_id": "call_1", "content": "def test_add(): assert add(1, 2) == 3"},
+  {"role": "assistant", "content": "The test expects add(1, 2) to return 3."},
+  {"role": "user", "content": "Continue with the fix."}
+]

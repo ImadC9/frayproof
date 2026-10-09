@@ -1,0 +1,4 @@
+version: 1
+checks:
+  structure:
+    system_messages: anywhere

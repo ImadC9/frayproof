@@ -1,0 +1,13 @@
+version: 1
+format: openai
+checks:
+  structure:
+    system_messages: leading_only
+pins:
+  - name: system-prompt
+    role: system
+    match: exact
+retain:
+  latest_user_message: exact
+  recent_exchanges: 2
+  tool_results: complete

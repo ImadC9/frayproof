@@ -1,0 +1,44 @@
+[
+  {
+    "command": "frayproof validate --snapshot fixtures/clean_session.json",
+    "exit_code": 0,
+    "stdout": "PASS: 0 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  {
+    "command": "frayproof validate --snapshot fixtures/orphaned_result.json",
+    "exit_code": 1,
+    "stdout": "FAIL: 1 error(s), 0 warning(s)\nERROR tool_pair_integrity after[2]: Tool result has no earlier assistant tool call. tool_call_id=\"call_1\"\n",
+    "stderr": ""
+  },
+  {
+    "command": "frayproof check --before fixtures/clean_session.json --after fixtures/legitimate_compaction.json --contract examples/contract.yaml",
+    "exit_code": 0,
+    "stdout": "PASS: 0 error(s), 0 warning(s)\n",
+    "stderr": ""
+  },
+  {
+    "command": "frayproof check --before fixtures/clean_session.json --after fixtures/dropped_constraint.json --contract examples/contract.yaml",
+    "exit_code": 1,
+    "stdout": "FAIL: 2 error(s), 0 warning(s)\nERROR pinned_content before[0]: Pinned message was removed or changed. pin=\"system-prompt\"\nERROR pinned_content before[0]: Pinned text no longer appears in message content. pin=\"no-prod-writes\"\n",
+    "stderr": ""
+  },
+  {
+    "command": "frayproof mutate --target examples/mutation_compactor.py:compact --input fixtures/mutation_session.json --contract examples/weak_contract.yaml",
+    "exit_code": 1,
+    "stdout": "BASELINE PASS: real transformation satisfies the contract.\nMUTATION SCORE: 12/20 caught (60.00%); 8 survived, 0 skipped.\nCAUGHT drop_tool_call [after[3].tool_calls[0]]: Rejected by tool_pair_integrity.\nCAUGHT drop_tool_call [after[6].tool_calls[0]]: Rejected by tool_pair_integrity.\nCAUGHT drop_tool_call [after[6].tool_calls[1]]: Rejected by tool_pair_integrity.\nCAUGHT drop_tool_result [after[4]]: Rejected by tool_pair_integrity.\nCAUGHT drop_tool_result [after[7]]: Rejected by tool_pair_integrity.\nCAUGHT drop_tool_result [after[8]]: Rejected by tool_pair_integrity.\nCAUGHT duplicate_tool_id [after[3].tool_calls[0]]: Rejected by unique_tool_ids.\nCAUGHT duplicate_tool_id [after[6].tool_calls[0]]: Rejected by unique_tool_ids.\nCAUGHT duplicate_tool_id [after[6].tool_calls[1]]: Rejected by unique_tool_ids.\nSURVIVED remove_pinned_text [after[0]]: Instruction or pinned text loss passed; add or strengthen content pins.\nCAUGHT swap_call_result [after[3].tool_calls[0]->after[4]]: Rejected by tool_pair_integrity, structure.\nCAUGHT swap_call_result [after[6].tool_calls[0]->after[7]]: Rejected by tool_pair_integrity, structure.\nCAUGHT swap_call_result [after[6].tool_calls[1]->after[8]]: Rejected by tool_pair_integrity, structure.\nSURVIVED move_instruction [after[0]]: Instruction relocation passed; check the instruction-placement policy.\nSURVIVED drop_latest_user [after[9]]: Latest user message loss passed; enable retain.latest_user_message: exact.\nSURVIVED truncate_tool_result [after[4]]: Result text truncation passed; enable retain.tool_results: complete.\nSURVIVED truncate_tool_result [after[7]]: Result text truncation passed; enable retain.tool_results: complete.\nSURVIVED truncate_tool_result [after[8]]: Result text truncation passed; enable retain.tool_results: complete.\nSURVIVED drop_recent_exchange [after[2:5]]: Whole exchange loss passed; set retain.recent_exchanges to the required window.\nSURVIVED drop_recent_exchange [after[5:9]]: Whole exchange loss passed; set retain.recent_exchanges to the required window.\n",
+    "stderr": ""
+  },
+  {
+    "command": "frayproof mutate --target examples/mutation_compactor.py:compact --input fixtures/mutation_session.json --contract examples/mutation_contract.yaml",
+    "exit_code": 0,
+    "stdout": "BASELINE PASS: real transformation satisfies the contract.\nMUTATION SCORE: 20/20 caught (100.00%); 0 survived, 0 skipped.\nCAUGHT drop_tool_call [after[3].tool_calls[0]]: Rejected by tool_pair_integrity, retention.\nCAUGHT drop_tool_call [after[6].tool_calls[0]]: Rejected by tool_pair_integrity, retention.\nCAUGHT drop_tool_call [after[6].tool_calls[1]]: Rejected by tool_pair_integrity, retention.\nCAUGHT drop_tool_result [after[4]]: Rejected by tool_pair_integrity, retention.\nCAUGHT drop_tool_result [after[7]]: Rejected by tool_pair_integrity, retention.\nCAUGHT drop_tool_result [after[8]]: Rejected by tool_pair_integrity, retention.\nCAUGHT duplicate_tool_id [after[3].tool_calls[0]]: Rejected by unique_tool_ids, retention.\nCAUGHT duplicate_tool_id [after[6].tool_calls[0]]: Rejected by unique_tool_ids, retention.\nCAUGHT duplicate_tool_id [after[6].tool_calls[1]]: Rejected by unique_tool_ids, retention.\nCAUGHT remove_pinned_text [pin:system-prompt@after[0]]: Rejected by pinned_content.\nCAUGHT swap_call_result [after[3].tool_calls[0]->after[4]]: Rejected by tool_pair_integrity, structure, retention.\nCAUGHT swap_call_result [after[6].tool_calls[0]->after[7]]: Rejected by tool_pair_integrity, structure, retention.\nCAUGHT swap_call_result [after[6].tool_calls[1]->after[8]]: Rejected by tool_pair_integrity, structure, retention.\nCAUGHT move_instruction [after[0]]: Rejected by structure.\nCAUGHT drop_latest_user [after[9]]: Rejected by retention.\nCAUGHT truncate_tool_result [after[4]]: Rejected by retention.\nCAUGHT truncate_tool_result [after[7]]: Rejected by retention.\nCAUGHT truncate_tool_result [after[8]]: Rejected by retention.\nCAUGHT drop_recent_exchange [after[2:5]]: Rejected by retention.\nCAUGHT drop_recent_exchange [after[5:9]]: Rejected by retention.\n",
+    "stderr": ""
+  },
+  {
+    "command": "python examples/toy_agent.py",
+    "exit_code": 0,
+    "stdout": "Safe compaction: 6 -> 3 messages\nBroken compaction blocked:\nFAIL: 1 error(s), 0 warning(s)\nERROR tool_pair_integrity after[2]: Tool result has no earlier assistant tool call. tool_call_id=\"call_1\"\n",
+    "stderr": ""
+  }
+]

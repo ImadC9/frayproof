@@ -1,0 +1,5 @@
+[
+  {"role": "system", "content": "You are a coding agent. Never write to production."},
+  {"role": "assistant", "content": "Summary: read test_app.py. The test expects add(1, 2) to return 3."},
+  {"role": "user", "content": "Continue with the fix."}
+]

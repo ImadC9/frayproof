@@ -1,0 +1,4 @@
+version: 1
+checks:
+  tool_pairs:
+    allow_trailing_pending_call: true

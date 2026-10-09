@@ -1,0 +1,49 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m ruff check .
+      - run: python -m ruff format --check .
+      - run: python -m pytest --cov=frayproof --cov-report=term-missing
+      - run: python examples/toy_agent.py
+      - run: frayproof mutate --target examples/mutation_compactor.py:compact --input fixtures/mutation_session.json --contract examples/mutation_contract.yaml
+
+  distributions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check --strict dist/*
+      - run: python -m venv smoke-env
+      - run: smoke-env/bin/python -m pip install dist/*.whl
+      - run: smoke-env/bin/frayproof validate --snapshot fixtures/clean_session.json
+      - run: smoke-env/bin/frayproof check --before fixtures/clean_session.json --after fixtures/legitimate_compaction.json --contract examples/contract.yaml
+      - run: smoke-env/bin/frayproof mutate --target examples/mutation_compactor.py:compact --input fixtures/mutation_session.json --contract examples/mutation_contract.yaml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frayproof-distributions
+          path: dist/*
