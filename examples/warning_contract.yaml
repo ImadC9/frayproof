@@ -1,0 +1,6 @@
+version: 1
+format: openai
+checks:
+  tool_pairs:
+    enabled: true
+    severity: warning

@@ -1,0 +1,10 @@
+version: 1
+format: openai
+checks:
+  pinned_content:
+    enabled: true
+    severity: error
+pins:
+  - name: no-prod-writes
+    contains: "Never write to production"
+    severity: warning
