@@ -345,7 +345,23 @@ or command usage. Reports include a schema version and every finding's check,
 severity, plain-English message, snapshot, and message index.
 
 The repository includes a GitHub Actions test/build matrix. It does not publish.
-See [contributing](CONTRIBUTING.md) and the [local release handoff](docs/RELEASING.md).
+See [contributing](CONTRIBUTING.md) and the [release guide](docs/RELEASING.md).
+
+## Contribute
+
+Start with one of these scoped tasks:
+
+- [Warning-policy report examples](https://github.com/ImadC9/frayproof/issues/1)
+  — good first issue; captured commands, small fixtures, and output tests.
+- [Contract JSON schema](https://github.com/ImadC9/frayproof/issues/2)
+  — help wanted; editor support and validation coverage.
+- [Anthropic Messages loader](https://github.com/ImadC9/frayproof/issues/3)
+  — help wanted; provider mapping, exact identity, and tool-pair fixtures.
+
+Comment on the issue before starting so we can coordinate. Each issue lists
+starting files, acceptance criteria, and relevant tests. For the schema or
+loader, share the proposed approach first. Follow [CONTRIBUTING.md](CONTRIBUTING.md)
+for setup and the full checks before opening a pull request.
 
 ## Scope
 
@@ -358,7 +374,8 @@ future loaders.
 SDK-style `tool_calls: null` is accepted. Known unused optional null fields are
 equivalent to omitted fields in exact comparisons; opaque custom metadata stays
 protected. Neutral replacements are compared using their current fields.
-See [review fixes](docs/REVIEW_FIXES.md) and [contract semantics](docs/CONTRACTS.md).
+See [contract semantics](docs/CONTRACTS.md) and the
+[release regression notes](docs/RELEASE_NOTES_0.1.0.md#regression-coverage).
 
 Frayproof does not judge summary quality or infer which facts matter. Declare pins
 and retention for what must survive. See [prior art](PRIOR_ART.md) for existing validators and compaction tools.

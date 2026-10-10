@@ -1,58 +1,73 @@
-# Release handoff
+# Release guide
 
-Source: `ImadC9/frayproof`. The CI workflow builds and tests only. The separate
-`release.yml` workflow publishes only when manually dispatched on `main` with
-the successful CI run ID for that exact revision. It checks all six matrix jobs
-and packaging, downloads their artifacts without rebuilding, publishes to PyPI
-with a Trusted Publisher, then creates the matching GitHub tag and release.
-`docs/ISSUE_DRAFTS.md` and `docs/ANNOUNCEMENT_DRAFT.md` remain drafts unless
-separately selected for posting.
+The [CI workflow](../.github/workflows/ci.yml) builds and tests source changes.
+The separate [release workflow](../.github/workflows/release.yml) publishes
+only when a maintainer manually dispatches it on `main` with a successful CI
+run ID for that exact revision. It downloads the tested distributions without
+rebuilding, publishes to PyPI through a Trusted Publisher, and creates the
+matching GitHub tag and release.
 
-The hosted Linux/Windows Python 3.12/3.13/3.14 matrix passed on 2026-10-09:
-297 tests pass in each of the six combinations, and packaging passes.
-[Hosted validation run](https://github.com/ImadC9/frayproof/actions/runs/37876640504)
-records the initial release gate. For any subsequent source changes, require
-all six combinations and packaging to pass again before release. Local tests
-alone do not establish the supported matrix. The reported review defects are
-covered by [regressions and installed-wheel probes](REVIEW_FIXES.md).
+This workflow currently targets version `0.1.0`. For a later version, update
+the version, expected filenames, tag, and release-note path in the workflow
+before running its CI gate.
 
-## Review the local release
+## Prepare and review
 
-The source repository, README demos, Apache-2.0 license, test suite, and examples
-are included in the source distribution. The wheel contains the Python package,
-typed marker, license, and CLI entry point. A separate source ZIP supports local
-review without unpacking a Python distribution.
+1. Confirm the version, license, project metadata URLs, changelog, and
+   [release notes](RELEASE_NOTES_0.1.0.md).
+2. Run the validation commands in [CONTRIBUTING.md](../CONTRIBUTING.md).
+   Build a wheel and source distribution for local review, check their metadata,
+   and confirm the source distribution can rebuild successfully.
+3. Install the wheel into a fresh environment and run the README demos from
+   outside the checkout, without a working-tree `PYTHONPATH`. The weak mutation
+   example should exit `1` with 12/20 caught; the stronger retention contract
+   should exit `0` with 20/20 caught.
+4. Run `python examples/verify_review_fixes.py` against the installed wheel from
+   outside the checkout. See the [regression coverage](RELEASE_NOTES_0.1.0.md#regression-coverage)
+   for the identity, input, and mutation cases it exercises.
+5. Refresh transcripts with `python examples/capture_demos.py`, run
+   `python -m pytest tests/test_docs.py -q`, and commit any intended changes.
 
-Run the validation commands from CONTRIBUTING.md. Install the built wheel into a
-fresh environment and rerun the README demos from outside the source directory.
-This checks that imports work without an editable-install path or a working-tree
-`PYTHONPATH`. Rebuild from the source distribution as well as from the checkout.
-Verify the weak mutation example exits `1` with 12/20 caught and the stronger
-contract exits `0` with 20/20 caught using the reusable retention contract.
-Refresh transcripts with `python examples/capture_demos.py` and run the README
-drift tests.
-Run `python examples/verify_review_fixes.py` with the installed wheel from outside
-the checkout to verify the review defects and SDK-null behavior independently.
+## Select the tested artifacts
 
-## Publication requires the maintainer's instruction
+Push the reviewed source to `main` and wait for its complete CI run. Require
+all six Linux/Windows jobs on Python 3.12, 3.13, and 3.14, plus the
+`distributions` job, to succeed. Local checks alone do not establish the
+supported platform matrix.
 
-After the user explicitly requests publication:
+Record that run's ID and commit SHA for this release. Download its
+`frayproof-distributions` artifact, confirm its version and filenames, and
+record SHA-256 hashes of the wheel and source distribution. Review these exact
+artifacts and repeat the fresh-install probes against the CI wheel. Local
+review builds are useful evidence; the release workflow publishes the CI files.
 
-1. Recheck `frayproof` availability on PyPI and confirm `ImadC9/frayproof` as the
-   public source repository.
-2. Confirm source, issue, and changelog URLs in project metadata.
-3. Confirm the reviewed source and release artifacts correspond to the tested
-   revision, and require the complete GitHub CI matrix and packaging to pass.
-4. Rebuild and check wheel and source distribution, confirm version and hashes.
-5. Configure the PyPI Trusted Publisher for owner `ImadC9`, repository `frayproof`,
-   workflow `release.yml`, environment `pypi`. For the first upload, register it
-   under account Publishing as a pending publisher for project `frayproof`.
-6. Dispatch `Publish 0.1.0` on `main` with its successful CI run ID. The workflow
-   publishes the verified distributions, creates tag `v0.1.0`, and publishes the
-   GitHub release from `docs/RELEASE_NOTES_0.1.0.md` with the same files attached.
-7. Open good first issue drafts only if selected for posting.
-8. Verify registry installation and the README demo in a fresh environment.
+If `main` changes, select a new successful CI run for the new head. The release
+workflow rejects a run from another revision, branch, event, or workflow, and
+requires the expected six test jobs plus packaging. Historical validation
+evidence belongs in the version's release notes, not in this procedure.
 
-Publication is complete only after the registry has version `0.1.0`, registry
-hashes match the verified artifacts, the GitHub release targets the tested
-revision, and fresh registry installation plus the demo pass.
+## Publish
+
+A package release is a separate maintainer decision from merging source or
+publishing contributor issues.
+
+1. Confirm ownership/availability of the PyPI project and that the target
+   version has not already been published.
+2. Configure the PyPI Trusted Publisher for owner `ImadC9`, repository
+   `frayproof`, workflow `release.yml`, and environment `pypi`. For the first
+   upload, use a pending publisher for project `frayproof`.
+3. Dispatch the workflow named `Publish 0.1.0` on `main` and supply
+   `ci_run_id` from the successful run for that exact head.
+4. Check the verification, PyPI, and GitHub-release jobs. The workflow publishes
+   the verified distributions, creates `v0.1.0` at the tested revision, and uses
+   `docs/RELEASE_NOTES_0.1.0.md` for the GitHub release with the same files attached.
+
+## Verify completion
+
+Confirm PyPI has the intended version and that its distribution hashes match
+the selected CI artifacts. Confirm the GitHub release tag targets the tested
+commit and its attached files match those artifacts. Finally, install the
+version from PyPI into a fresh environment and run the README demo.
+
+A release is complete when all of these checks pass. If a job fails, inspect
+the registry and tag state before retrying; PyPI versions cannot be overwritten.
