@@ -1,7 +1,15 @@
 # Frayproof
 
+**Catch context corruption in AI agents with deterministic contracts and mutation testing.**
+
 Check that an AI agent's conversation context still follows your rules after
 compaction, retry reconstruction, handoff, or memory hydration.
+
+![Frayproof blocks a broken compaction in the bundled offline toy agent](docs/images/demo.gif)
+
+Use Frayproof when you change an agent's context pipeline: protect instructions,
+tool-call pairs, the latest request, and retained results before the transformed
+messages reach the next model call.
 
 Frayproof is a standalone Python tool for context contracts you own. Declare
 stable pins and positional retention rules, compare before and after, then
@@ -13,6 +21,22 @@ key is needed by the checker.
 The hosted Linux/Windows matrix passes on Python 3.12, 3.13, and 3.14.
 Python 3.12 or newer is required.
 The distribution, Python import, and command are all named `frayproof`.
+
+## Quick start
+
+Run the bundled offline demo from a source checkout (Python 3.12+):
+
+```bash
+git clone https://github.com/ImadC9/frayproof.git
+cd frayproof
+python -m pip install .
+python examples/toy_agent.py
+```
+
+The demo accepts safe compaction and blocks a planted tool-pairing bug. The
+animation above renders the command's captured output. No model or API key is
+needed. Continue with [individual failure examples](#see-individual-bugs) or
+[mutation testing](#find-the-bugs-your-contract-misses).
 
 ## Install
 
