@@ -221,10 +221,41 @@ ERROR pinned_content before[0]: Pinned text no longer appears in message content
 The missing pins refer to their original location in `before`, even though that
 content is gone from `after`.
 
-## Declare the contract
+Warnings leave `passed` true and the exit code at `0`:
 
-This is `examples/contract.yaml`:
+```bash
+frayproof validate --snapshot fixtures/pending_batch.json --contract examples/warning_contract.yaml
+```
 
+<!-- demo:warning -->
+```text
+PASS: 0 error(s), 1 warning(s)
+WARNING tool_pair_integrity after[1]: Tool call has no result. tool_call_id="call_b"
+```
+
+A pin can override the `pinned_content` severity: the same dropped production
+constraint reports as a warning instead of an error:
+
+```bash
+frayproof check --before fixtures/clean_session.json --after fixtures/dropped_constraint.json --contract examples/severity_override_contract.yaml
+```
+
+<!-- demo:severity-override -->
+```text
+PASS: 0 error(s), 1 warning(s)
+WARNING pinned_content before[0]: Pinned text no longer appears in message content. pin="no-prod-writes"
+```
+
+An invalid input in JSON mode returns the input-error envelope and exits `2`:
+
+```bash
+frayproof validate --snapshot fixtures/malformed_content.json --format json
+```
+
+<!-- demo:input-error-json -->
+```text
+{"schema_version": 1, "error": "messages[0].content[0].type must be a string"}
+```
 ```yaml
 version: 1
 format: openai

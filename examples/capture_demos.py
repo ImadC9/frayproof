@@ -62,6 +62,41 @@ DEMOS = [
         ],
         0,
     ),
+    (
+        "warning",
+        [
+            "validate",
+            "--snapshot",
+            "fixtures/pending_batch.json",
+            "--contract",
+            "examples/warning_contract.yaml",
+        ],
+        0,
+    ),
+    (
+        "severity-override",
+        [
+            "check",
+            "--before",
+            "fixtures/clean_session.json",
+            "--after",
+            "fixtures/dropped_constraint.json",
+            "--contract",
+            "examples/severity_override_contract.yaml",
+        ],
+        0,
+    ),
+    (
+        "input-error-json",
+        [
+            "validate",
+            "--snapshot",
+            "fixtures/malformed_content.json",
+            "--format",
+            "json",
+        ],
+        2,
+    ),
 ]
 
 
