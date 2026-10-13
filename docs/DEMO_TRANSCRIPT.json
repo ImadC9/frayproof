@@ -36,6 +36,24 @@
     "stderr": ""
   },
   {
+    "command": "frayproof validate --snapshot fixtures/pending_batch.json --contract examples/warning_contract.yaml",
+    "exit_code": 0,
+    "stdout": "PASS: 0 error(s), 1 warning(s)\nWARNING tool_pair_integrity after[1]: Tool call has no result. tool_call_id=\"call_b\"\n",
+    "stderr": ""
+  },
+  {
+    "command": "frayproof check --before fixtures/clean_session.json --after fixtures/dropped_constraint.json --contract examples/severity_override_contract.yaml",
+    "exit_code": 0,
+    "stdout": "PASS: 0 error(s), 1 warning(s)\nWARNING pinned_content before[0]: Pinned text no longer appears in message content. pin=\"no-prod-writes\"\n",
+    "stderr": ""
+  },
+  {
+    "command": "frayproof validate --snapshot fixtures/malformed_content.json --format json",
+    "exit_code": 2,
+    "stdout": "{\"schema_version\": 1, \"error\": \"messages[0].content[0].type must be a string\"}\n",
+    "stderr": ""
+  },
+  {
     "command": "python examples/toy_agent.py",
     "exit_code": 0,
     "stdout": "Safe compaction: 6 -> 3 messages\nBroken compaction blocked:\nFAIL: 1 error(s), 0 warning(s)\nERROR tool_pair_integrity after[2]: Tool result has no earlier assistant tool call. tool_call_id=\"call_1\"\n",
